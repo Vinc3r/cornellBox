@@ -4,8 +4,9 @@
     <title>Cornell box</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="css/styles.css" media="screen"/>
-    <script src="js/babylon.3.2.preview.js"></script>
-    <script src="js/babylon.inspector.bundle.js"></script>
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+    <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
 </head>
 
 <body>
@@ -57,29 +58,25 @@
             // set your lightmap channel below:
             // ambientTexture | lightmapTexture | lightmapTextureAsShadowMap
             var lightmapChannel = "lightmapTextureAsShadowMap";
-            console.log("lightmap channel: " + lightmapChannel);
             
             var myLM = null;
             
             for(i = 0; i < myLMobjects.length; i++){
-                myLM = new BABYLON.Texture("assets/LM/" + myLMobjects[i] + ".LM.png", scene, false, false, 3, function(){console.log('texture loaded')});
+                myLM = new BABYLON.Texture("assets/LM/" + myLMobjects[i] + ".LM.png", scene);
                 myLM.name = myLMobjects[i] + ".LM";
                 myLM.coordinatesIndex = 1;
                 myLM.vScale = -1;
                 var object = scene.getMeshByName(myLMobjects[i]);
-                if (!object) continue;
-                if(!object.material && !object._children) {
-                    console.log(object)
+                if (!object || (!object.material && !object._children)) {
                     continue;
                 };
                 if(object._children){
-                    console.log(object._children[0])
-                    for(c=0; object._children.length; c++){
-                        if(object._children[c].material){
+                    for(c=0; c < object._children.length; c++){
+                        if(object._children[c].material){                   
                             mtl = object._children[c].material;
                             mtl.lightmapTexture = myLM;
                             mtl.useLightmapAsShadowmap = true;
-                        }
+                        };
                     }
                 };
             };
@@ -139,8 +136,7 @@
             mtlCBground.albedoColor = new BABYLON.Color3.White;
            
 /* debug toolz */
-            BABYLON.DebugLayer.InspectorURL = "js/babylon.inspector.bundle.js";
-            scene.debugLayer.show()
+            //scene.debugLayer.show()
 		
 /* BJS engine */
         

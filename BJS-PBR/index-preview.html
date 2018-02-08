@@ -4,13 +4,13 @@
     <title>Cornell box</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="css/styles.css" media="screen"/>
-    <script src="js/babylon.3.1.js"></script>
+    <script src="js/babylon.3.2.preview.js"></script>
     <script src="js/babylon.inspector.bundle.js"></script>
 </head>
 
 <body>
     <div id="menu">
-        <a href="index-preview.html">BJS 3.2 preview</a>
+        <a href="index.html">BJS 3.1 stable</a>
     </div>
     <canvas id="canvas"></canvas>
     <script type="text/javascript">
@@ -48,7 +48,7 @@
         if(activateLightmap){
             
             // set your object list here
-            myLMobjects = [
+            var myLMobjects = [
                 "cornellBox.000",
                 "bloc.000",
                 "suzanne.000"
@@ -56,31 +56,32 @@
             
             // set your lightmap channel below:
             // ambientTexture | lightmapTexture | lightmapTextureAsShadowMap
-            lightmapChannel = "lightmapTextureAsShadowMap";
+            var lightmapChannel = "lightmapTextureAsShadowMap";
             console.log("lightmap channel: " + lightmapChannel);
             
-            // set your lightmap file format
-            texType = "png"
+            var myLM = null;
             
             for(i = 0; i < myLMobjects.length; i++){
-                myLM = new BABYLON.Texture("assets/LM/" + myLMobjects[i] + ".LM." + texType, scene);
+                myLM = new BABYLON.Texture("assets/LM/" + myLMobjects[i] + ".LM.png", scene, false, false, 3, function(){console.log('texture loaded')});
                 myLM.name = myLMobjects[i] + ".LM";
                 myLM.coordinatesIndex = 1;
-                if(texType == "dds"){
-                    myLM.vScale = 1;
-                }
-                else{
-                    myLM.vScale = -1;
-                }
-                object = scene.getMeshByName(myLMobjects[i]);
-                if(object.material.subMaterials == null){
-                    lightmapAssignation(object.material, myLM);
-                }
-                else{
-                    for(m = 0; m < object.material.subMaterials.length; m++){
-                        lightmapAssignation(object.material.subMaterials[m], myLM);
-                    }                
-                }
+                myLM.vScale = -1;
+                var object = scene.getMeshByName(myLMobjects[i]);
+                if (!object) continue;
+                if(!object.material && !object._children) {
+                    console.log(object)
+                    continue;
+                };
+                if(object._children){
+                    console.log(object._children[0])
+                    for(c=0; object._children.length; c++){
+                        if(object._children[c].material){
+                            mtl = object._children[c].material;
+                            mtl.lightmapTexture = myLM;
+                            mtl.useLightmapAsShadowmap = true;
+                        }
+                    }
+                };
             };
             
             function lightmapAssignation(mtl, myLM){
@@ -102,7 +103,7 @@
         
 /* reflection probes */
         
-    activateReflProbes = true;
+    activateReflProbes = false;
              
         if(activateReflProbes){        
             var sphereProbe = BABYLON.Mesh.CreateSphere("sphereProbe", 32, .25, scene);

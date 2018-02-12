@@ -33,14 +33,12 @@
             
 /* scene environment */
             
-        scene.clearColor = new BABYLON.Color3.White;
-        var helper = scene.createDefaultEnvironment({
-            createGround: false,
-            skyboxColor: new BABYLON.Color3.White,
-            toneMappingEnabled: true,
-            cameraContrast: 1,
-            cameraExposure: 1
-        });
+            scene.clearColor = new BABYLON.Color3.White;
+            var hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("assets/neutral_env_EnvHDR.dds", scene);
+            hdrTexture.name = "envTex";
+            hdrTexture.gammaSpace = false;
+            //       createDefaultSkybox(environmentTexture, pbr, scale, blur)
+            scene.createDefaultSkybox(hdrTexture, true, 1000, 0);
             
 /* lightmap assignation */
         
@@ -128,12 +126,26 @@
             
             mtlLight = scene.getMaterialByName("light.000");
             mtlLight.emissiveColor = new BABYLON.Color3.White;
+            
+            mtlCBgreen = scene.getMaterialByName("cornellBox.green.000");
+            mtlCBgreen.albedoColor = new BABYLON.Color3.Green;            
+            mtlCBgreen = scene.getMaterialByName("cornellBox.red.000");
+            mtlCBgreen.albedoColor = new BABYLON.Color3.Red;
+            
+            var defaultColor = new BABYLON.Color3(0.95,0.95,0.95);
+            var mtlList = ["bloc.000", "cornellBox.default.000", "cornellBox.ground.000"];
+            for(m=0; m < mtlList.length; m++){
+                var mtl = scene.getMaterialByName(mtlList[m]);
+                mtl.albedoColor = defaultColor;
+            };
+            
+/* meshes */
 
-            mtlCBdefault = scene.getMaterialByName("cornellBox.default.000");
-            mtlCBdefault.albedoColor = new BABYLON.Color3.White;
-
-            mtlCBground = scene.getMaterialByName("cornellBox.ground.000");
-            mtlCBground.albedoColor = new BABYLON.Color3.White;
+            var logo = scene.getMeshByName("BJSlogo.000");
+            for(m = 0; m<logo._children.length; m++){
+                logo._children[m].isVisible=false;
+            }
+            logo.isVisible=false;
            
 /* debug toolz */
             //scene.debugLayer.show()

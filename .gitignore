@@ -2,3 +2,5 @@
 *.DS_Store
 Thumbs.db
 .idea
+*.png~
+*.kra~

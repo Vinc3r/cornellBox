@@ -16,11 +16,12 @@
         
         var loadedPercent = 0;
         var loadingScreenDiv = window.document.getElementById("loadingScreen");
+        var loadingScreenShowTimer = null;
         
         function MyLoadingScreen() {
         }
         MyLoadingScreen.prototype.displayLoadingUI = function() {
-           var loadingScreenShowTimer = window.setInterval(function(){
+           loadingScreenShowTimer = window.setInterval(function(){
             loadingScreenDiv.innerHTML = 
             "<div class='content'>" +
                 "<h1>Loading the box...<h1>" +
@@ -169,7 +170,16 @@
                         loadedPercent = Math.floor(dlCount * 100.0) / 100.0;
                     }
                 }
-            );        
+            );
+            
+            //false white infinity skydome, to be see above the envTex
+            var falseSkydome = BABYLON.Mesh.CreateSphere("falseSkydome", 16, 20, scene);
+            falseSkydome.flipFaces(true);
+            falseSkydome.material = new BABYLON.PBRMaterial("falseSkydomeMtl", scene);
+            falseSkydome.material.albedoColor = new BABYLON.Color3.White;
+            falseSkydome.material.metallic = 0;
+            falseSkydome.material.roughness = 1;
+            falseSkydome.material.disableLighting = true;
             
             return scene;
         };

@@ -8,16 +8,54 @@
 </head>
 
 <body>
+    <div id="loadingScreen"></div>
     <canvas id="canvas"></canvas>
     <script type="text/javascript">
         var canvas = document.getElementById("canvas");
         var engine = new BABYLON.Engine(canvas, true);
         
+        var loadedPercent = 0;
+        var loadingScreenDiv = window.document.getElementById("loadingScreen");
+        
+        function MyLoadingScreen() {
+        }
+        MyLoadingScreen.prototype.displayLoadingUI = function() {
+           var loadingScreenShowTimer = window.setInterval(function(){
+            loadingScreenDiv.innerHTML = 
+            "<div class='content'>" +
+                "<h1>Loading the box...<h1>" +
+                "<span id='loadPercent'>(probably "+loadedPercent+"% now)</span>" +
+            "</div>" +
+            "<div id='kassdedi'>made by Vincent Lamy with Babylon.JS</div>"
+           }, 50);
+        };
+        MyLoadingScreen.prototype.hideLoadingUI = function() {
+            loadingScreenDiv.style.opacity = 1;
+            var loadingScreenHideTimer = window.setInterval(hideLoadingScreen, 50);
+            function hideLoadingScreen(){
+                if(loadingScreenDiv.style.opacity > 0){
+                    loadingScreenDiv.style.opacity -= 0.05;
+                }
+                if(loadingScreenDiv.style.opacity <= 0){
+                    loadingScreenDiv.style.opacity = 0;
+                    clearInterval(loadingScreenHideTimer);
+                    clearInterval(loadingScreenShowTimer);
+                    loadingScreenDiv.style.display = "none";
+                }
+            }
+        };
+        
+        
+        
+        var loadingScreen = new MyLoadingScreen();
+        //Set the loading screen in the engine to replace the default one
+        engine.loadingScreen = loadingScreen;
+        
         var createScene = function () {
 
             // scene parameters
             var scene = new BABYLON.Scene(engine);
-            scene.clearColor = new BABYLON.Color3.Red;
+            scene.clearColor = new BABYLON.Color3.White;
             var hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("assets/neutral_env_EnvHDR.dds", scene);
             hdrTexture.name = "envTex";
             hdrTexture.gammaSpace = false;
@@ -121,7 +159,16 @@
                 "assets/",
                 "cornellBox-PBR.gltf",
                 scene,
-                cornellBoxLoaded
+                cornellBoxLoaded,
+                function (evt){
+                    if (evt.lengthComputable){
+                        loadedPercent = (evt.loaded * 100 / evt.total).toFixed();
+                    }
+                    else{
+                        var dlCount = evt.loaded / (1024 * 1024);
+                        loadedPercent = Math.floor(dlCount * 100.0) / 100.0;
+                    }
+                }
             );        
             
             return scene;

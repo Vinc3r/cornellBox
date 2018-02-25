@@ -1,10 +1,37 @@
+/* custom font  */
+
+@font-face {
+	font-family: "OpenSans";
+	font-style: italic;
+    font-weight: normal;
+	src: url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-italic.ttf');
+    src: url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-italic.woff') format('woff'), url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-italic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-bold.eot');
+    src: url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-bold.eot?#iefix') format('embedded-opentype'), url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-bold.woff') format('woff'), url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-bold.ttf') format('truetype'), url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-bold.svg#open_sansbold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-regular.eot');
+    src: url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-regular.eot?#iefix') format('embedded-opentype'), url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-regular.woff') format('woff'), url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-regular.ttf') format('truetype'), url('https://www.nothing-is-3d.com/themes/vinc3r/fontopensans-regular.svg#open_sansregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 html, body {
     overflow: hidden;
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: OpenSans, tahoma, arial, sans-serif;
+    color:white;
 }
 
 #canvas {
@@ -13,11 +40,29 @@ html, body {
     touch-action: none;
 }
 
-#menu{
+#loadingScreen{
+    width: 100%;
+    height: 100%;
     position:absolute;
-    background-color:rgba(0,0,0,.5);
-    color:white;
+    text-align:center;
+    background-image:url("https://www.nothing-is-3d.com/themes/vinc3r/img/banner.png")
 }
-    #menu a{
-        color:white;
+    #loadingScreen .content{
+        margin-top:40vh;
+        background-color:rgba(0,0,0,0.5);
+        border:1pt solid black;
+    }
+    #loadPercent{
+        font-weight:100;
+        font-size:0.6em;
+        letter-spacing:6pt;
+    }
+    #kassdedi{
+        position:absolute;
+        bottom: 8pt;
+        right: 8pt;
+        font-weight:100;
+        font-style:italic;
+        letter-spacing: 1pt;
+        font-size:0.8em;
     }

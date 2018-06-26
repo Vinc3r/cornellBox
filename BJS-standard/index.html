@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Cornell box - PBR workflow</title>
+    <title>Cornell box - Standard workflow</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="css/styles.css" media="screen"/>
     <script src="js/babylon.js" ></script>
@@ -55,18 +55,15 @@
             // scene parameters
             var scene = new BABYLON.Scene(engine);
             scene.clearColor = new BABYLON.Color3.White;
-            var hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("assets/neutral_env_EnvHDR.dds", scene);
-            hdrTexture.name = "envTex";
-            hdrTexture.gammaSpace = false;
-            scene.createDefaultSkybox(hdrTexture, true, 1000, 0);
+            scene.ambientColor = new BABYLON.Color3.White;            
 
             // Add a camera to the scene and attach it to the canvas
             var universalCamera = new BABYLON.UniversalCamera("universalCamera", new BABYLON.Vector3(0,1,0), scene);
             universalCamera.speed = 0.1;
             universalCamera.fov = 1.2;
             universalCamera.minZ = 0.01;
-            universalCamera.position = new BABYLON.Vector3(0, 1.5, 4);
-            universalCamera.rotation = new BABYLON.Vector3(0, -3.15, 0);
+            universalCamera.position = new BABYLON.Vector3(0, 1.5, -4);
+            universalCamera.rotation = new BABYLON.Vector3(0, Math.PI * 2, 0);
             scene.activeCamera = universalCamera;
             scene.activeCamera.attachControl(canvas);
 
@@ -86,31 +83,33 @@
                     lightmap.name = lightmappedObjects[i] + ".LM";
                     // using UV2
                     lightmap.coordinatesIndex = 1;
+                    lightmap.vScale = -1;
                     var mesh = scene.getMeshByName(lightmappedObjects[i]);
-                    var meshChildren = mesh.getChildren();
                     //gltf importer split multimat to children meshes
-                    if (!mesh || !mesh.material && (meshChildren.length == 0)) {
+                    if (!mesh || !mesh.material) {
                         //here, the mesh doesn't have material or mesh childs, we skip
                         continue;
                     }
                     // here the root mesh is divided into one submesh per material
-                    if(!mesh.material && (meshChildren.length > 0)){
+                    if(!mesh.material && mesh.material.subMaterials){
                         // and cycle to its childrens, and so the abstract multimaterial list
-                        for(j = 0; j < mesh._children.length; j++){
-                            var material = mesh._children[j].material;
+                        for(j = 0; j < mesh.material.subMaterials.length; j++){
+                            var material = mesh.material.subMaterials[j];
                             // lightmap as shadow
+                            material.ambientColor = new BABYLON.Color3.White;
                             material.lightmapTexture = lightmap;
                             material.useLightmapAsShadowmap = true;
                         }
                     }
-                    if(mesh.material){
+                    if(mesh.material && !mesh.material.subMaterials){
                         // here we have one mesh with one submaterial
                         // lightmap as shadow
+                        material.ambientColor = new BABYLON.Color3.White;
                         mesh.material.lightmapTexture = lightmap;
                         mesh.material.useLightmapAsShadowmap = true;
                     }
                 }
-
+/*
                 // the mesh fake-light on the ceiling
                 var lightMaterial = scene.getMaterialByName("light.000");
                 lightMaterial.emissiveColor = new BABYLON.Color3.White;
@@ -159,12 +158,14 @@
                     bjsRedMaterial.emissiveColor = new BABYLON.Color3( ( Math.cos(frame)* 0.5 ) + 0.5 , 0, 0);
                     bjsLogo.position.y = (Math.cos(frame*0.1)*0.15) + 1.5;
                 });
+                
+                */
             };
 
             //now that our cornellBoxLoaded function is written, time to load the gltf file
-            var gltfLoader = BABYLON.SceneLoader.Append(
+            var babylonLoader = BABYLON.SceneLoader.Append(
                 "assets/",
-                "cornellBox-PBR.gltf",
+                "cornellBox-standard.babylon",
                 scene,
                 cornellBoxLoaded,
                 function (evt){
@@ -177,16 +178,6 @@
                     }
                 }
             );
-
-            //fake white infinity skydome, to be seen above the envTex
-            var falseSkydome = BABYLON.Mesh.CreateSphere("falseSkydome", 16, 20, scene);
-            falseSkydome.flipFaces(true);
-            falseSkydome.material = new BABYLON.PBRMaterial("falseSkydomeMtl", scene);
-            falseSkydome.material.albedoColor = new BABYLON.Color3.White;
-            falseSkydome.material.metallic = 0;
-            falseSkydome.material.roughness = 1;
-            falseSkydome.material.disableLighting = true;
-            falseSkydome.material.unlit = true;
 
             return scene;
         };

@@ -32,7 +32,7 @@
         };
         MyLoadingScreen.prototype.hideLoadingUI = function() {
             loadingScreenDiv.style.opacity = 1;
-            var loadingScreenHideTimer = window.setInterval(hideLoadingScreen, 50);
+            var loadingScreenHideTimer = window.setInterval(hideLoadingScreen, 25);
             function hideLoadingScreen(){
                 if(loadingScreenDiv.style.opacity > 0){
                     loadingScreenDiv.style.opacity -= 0.05;
@@ -87,19 +87,14 @@
                     // using UV2
                     lightmap.coordinatesIndex = 1;
                     var mesh = scene.getMeshByName(lightmappedObjects[i]);
+                    var meshChildren = mesh.getChildren();
                     //gltf importer split multimat to children meshes
-                    if (!mesh || !mesh.material && !mesh._children) {
+                    if (!mesh || !mesh.material && (meshChildren.length == 0)) {
                         //here, the mesh doesn't have material or mesh childs, we skip
                         continue;
                     }
-                    if(mesh.material && !mesh._children){
-                        // here we have one mesh with one submaterial
-                        // lightmap as shadow
-                        mesh.material.lightmapTexture = lightmap;
-                        mesh.material.useLightmapAsShadowmap = true;
-                    }
-                    // and here the root mesh divided into one submesh per material
-                    else if(!mesh.material && mesh._children){
+                    // here the root mesh is divided into one submesh per material
+                    if(!mesh.material && (meshChildren.length > 0)){
                         // and cycle to its childrens, and so the abstract multimaterial list
                         for(j = 0; j < mesh._children.length; j++){
                             var material = mesh._children[j].material;
@@ -108,7 +103,13 @@
                             material.useLightmapAsShadowmap = true;
                         }
                     }
-                };
+                    if(mesh.material){
+                        // here we have one mesh with one submaterial
+                        // lightmap as shadow
+                        mesh.material.lightmapTexture = lightmap;
+                        mesh.material.useLightmapAsShadowmap = true;
+                    }
+                }
 
                 // the mesh fake-light on the ceiling
                 var lightMaterial = scene.getMaterialByName("light.000");

@@ -1,10 +1,11 @@
 <!doctype html>
 <html>
+
 <head>
     <title>Cornell box - PBR workflow</title>
-	<meta charset="UTF-8">
-	<link rel="stylesheet" href="css/styles.css" media="screen"/>
-    <script src="js/babylon.js" ></script>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/styles.css" media="screen" />
+    <script src="js/babylon.js"></script>
 </head>
 
 <body>
@@ -12,40 +13,43 @@
     <script type="text/javascript">
         var canvas = document.getElementById("canvas");
         var engine = new BABYLON.Engine(canvas, true);
+        var scene = new BABYLON.Scene(engine);
+        scene.clearColor = BABYLON.Color3.White();
+        var hdrTexture = new BABYLON.CubeTexture.CreateFromPrefilteredData("assets/neutral_environment.env", scene);
+        hdrTexture.name = "envTex";
+        hdrTexture.gammaSpace = false;
+        scene.environmentTexture = hdrTexture;
 
-        var createScene = function () {
+        // Add a camera to the scene and attach it to the canvas
+        var universalCamera = new BABYLON.UniversalCamera("universalCamera", new BABYLON.Vector3(0, 1, 0), scene);
+        universalCamera.speed = 0.1;
+        universalCamera.fov = 1.2;
+        universalCamera.minZ = 0.01;
+        universalCamera.position = new BABYLON.Vector3(0, 1.5, 4);
+        universalCamera.rotation = new BABYLON.Vector3(0, -3.15, 0);
+        scene.activeCamera = universalCamera;
+        scene.activeCamera.attachControl(canvas);
 
-            // scene parameters
-            var scene = new BABYLON.Scene(engine);
-            scene.clearColor = BABYLON.Color3.White();
-            var hdrTexture = new BABYLON.CubeTexture.CreateFromPrefilteredData("assets/neutral_env_EnvHDR.dds", scene);
-            hdrTexture.name = "envTex";
-            hdrTexture.gammaSpace = false;
-            scene.environmentTexture = hdrTexture;
+        var bjsLogo = null;
 
-            // Add a camera to the scene and attach it to the canvas
-            var universalCamera = new BABYLON.UniversalCamera("universalCamera", new BABYLON.Vector3(0,1,0), scene);
-            universalCamera.speed = 0.1;
-            universalCamera.fov = 1.2;
-            universalCamera.minZ = 0.01;
-            universalCamera.position = new BABYLON.Vector3(0, 1.5, 4);
-            universalCamera.rotation = new BABYLON.Vector3(0, -3.15, 0);
-            scene.activeCamera = universalCamera;
-            scene.activeCamera.attachControl(canvas);
-
-            var bjsLogo = null;
-
-            var cornellBoxLoaded = function(){
+        //time to load the gltf file
+        BABYLON.SceneLoader.ImportMesh(
+            "",
+            "assets/",
+            "cornellBox-PBR.gltf",
+            scene,
+            function () {
                 //lightmaps handling
                 var lightmappedObjects = [
                     "cornellBox.000",
                     "bloc.000",
                     "suzanne.000"
                 ];
-                for(i = 0; i < lightmappedObjects.length; i++){
+                for (i = 0; i < lightmappedObjects.length; i++) {
                     // we create the lightmap using the mesh name
-                        //new Texture(url, scene, noMipmap, invertY, samplingMode, onLoad, onError, buffer, deleteBuffer, format)
-                    var lightmap = new BABYLON.Texture("assets/LM/" + lightmappedObjects[i] + ".LM.png", scene, false, false);
+                    //new Texture(url, scene, noMipmap, invertY, samplingMode, onLoad, onError, buffer, deleteBuffer, format)
+                    var lightmap = new BABYLON.Texture("assets/LM/" + lightmappedObjects[i] + ".LM.png", scene,
+                        false, false);
                     lightmap.name = lightmappedObjects[i] + ".LM";
                     // using UV2
                     lightmap.coordinatesIndex = 1;
@@ -57,16 +61,16 @@
                         continue;
                     }
                     // here the root mesh is divided into one submesh per material
-                    if(!mesh.material && (meshChildren.length > 0)){
+                    if (!mesh.material && (meshChildren.length > 0)) {
                         // and cycle to its childrens, and so the abstract multimaterial list
-                        for(j = 0; j < mesh._children.length; j++){
+                        for (j = 0; j < mesh._children.length; j++) {
                             var material = mesh._children[j].material;
                             // lightmap as shadow
                             material.lightmapTexture = lightmap;
                             material.useLightmapAsShadowmap = true;
                         }
                     }
-                    if(mesh.material){
+                    if (mesh.material) {
                         // here we have one mesh with one submaterial
                         // lightmap as shadow
                         mesh.material.lightmapTexture = lightmap;
@@ -82,16 +86,16 @@
                 bjsLogo = scene.getMeshByName("BJSlogo.000");
                 bjsLogo.position.y = 1.5;
                 scene.getMaterialByName("BJS-3D-logo_white.01.000").emissiveColor = BABYLON.Color3.White();
-                for(k = 0; k < bjsLogo._children.length; k++){
+                for (let k = 0; k < bjsLogo._children.length; k++) {
                     bjsLogo._children[k].material.metallic = 0.1;
                     bjsLogo._children[k].material.roughness = 0;
-                };
+                }
                 var bjsRedMaterial = scene.getMaterialByName("BJS-3D-logo_red.01.000");
                 bjsRedMaterial.metallic = 1;
 
                 // prepare the room to receive shadows
                 var cornellBox = scene.getMeshByName("cornellBox.000");
-                for(k = 0; k < cornellBox._children.length; k++) {
+                for (let k = 0; k < cornellBox._children.length; k++) {
                     cornellBox._children[k].receiveShadows = true;
                 }
                 cornellBox.receiveShadows = true;
@@ -114,40 +118,18 @@
                 // some animations on the logo
                 var frame = 0; //this will be used as a time variable
 
-                scene.registerBeforeRender(function() {
+                scene.registerBeforeRender(function () {
                     frame += 0.1;
                     bjsLogo.rotation.x += .008;
                     bjsLogo.rotation.y -= .009;
                     bjsLogo.rotation.z -= .01;
-                    bjsRedMaterial.emissiveColor = new BABYLON.Color3( ( Math.cos(frame)* 0.5 ) + 0.5 , 0, 0);
-                    bjsLogo.position.y = (Math.cos(frame*0.1)*0.15) + 1.5;
+                    bjsRedMaterial.emissiveColor = new BABYLON.Color3((Math.cos(frame) * 0.5) + 0.5, 0, 0);
+                    bjsLogo.position.y = (Math.cos(frame * 0.1) * 0.15) + 1.5;
                 });
-            };
+            }
+        );
 
-            //now that our cornellBoxLoaded function is written, time to load the gltf file
-            var gltfLoader = BABYLON.SceneLoader.Append(
-                "assets/",
-                "cornellBox-PBR.gltf",
-                scene,
-                cornellBoxLoaded
-            );
-
-            //fake white infinity skydome, to be seen above the envTex
-            var falseSkydome = BABYLON.Mesh.CreateSphere("falseSkydome", 16, 20, scene);
-            falseSkydome.flipFaces(true);
-            falseSkydome.material = new BABYLON.PBRMaterial("falseSkydomeMtl", scene);
-            falseSkydome.material.albedoColor = BABYLON.Color3.White();
-            falseSkydome.material.metallic = 0;
-            falseSkydome.material.roughness = 1;
-            falseSkydome.material.disableLighting = true;
-            falseSkydome.material.unlit = true;
-
-            return scene;
-        };
-
-        var scene = createScene();
-
-        engine.runRenderLoop(function () { // Register a render loop to repeatedly render the scene
+        engine.runRenderLoop(function () {
             scene.render();
         });
 
@@ -156,4 +138,5 @@
         });
     </script>
 </body>
+
 </html>

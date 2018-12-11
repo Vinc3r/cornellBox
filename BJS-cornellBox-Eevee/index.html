@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Cornell box - Eevee workflow</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/styles.css" media="screen" />
+    <script src="js/babylon.js"></script>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script type="text/javascript">
+        var canvas = document.getElementById("canvas");
+        var engine = new BABYLON.Engine(canvas, true);
+        var scene = new BABYLON.Scene(engine);
+        scene.clearColor = BABYLON.Color3.White();
+        var hdrTexture = new BABYLON.CubeTexture.CreateFromPrefilteredData("assets/neutral_environment.env", scene);
+        hdrTexture.name = "envTex";
+        hdrTexture.gammaSpace = false;
+        scene.environmentTexture = hdrTexture;
+
+        // Add a camera to the scene and attach it to the canvas
+        var universalCamera = new BABYLON.UniversalCamera("universalCamera", new BABYLON.Vector3(0, 1, 0), scene);
+        universalCamera.speed = 0.1;
+        universalCamera.fov = 1.2;
+        universalCamera.minZ = 0.01;
+        universalCamera.position = new BABYLON.Vector3(0, 1.5, 4);
+        universalCamera.rotation = new BABYLON.Vector3(0, -3.15, 0);
+        scene.activeCamera = universalCamera;
+        scene.activeCamera.attachControl(canvas);
+
+        function assignLightmapOnMaterial(material, lightmap) {
+            material.lightmapTexture = lightmap;
+            material.lightmapTexture.coordinatesIndex = 1;
+            material.useLightmapAsShadowmap = true;
+        }
+
+        BABYLON.SceneLoader.ImportMesh(
+            "",
+            "assets/",
+            "cornellBox-Eevee.gltf",
+            scene,
+            function () {
+                let lightmappedMeshes = ["bloc.000", "suzanne.000", "cornellBox.000"];
+                for (let i = 0; i < lightmappedMeshes.length; i++) {
+                    let currentMesh = scene.getNodeByName(lightmappedMeshes[i]);
+                    let currentMeshChildren = currentMesh.getChildren();
+                    let currentLightmap = new BABYLON.Texture(
+                        "assets/LM/" + currentMesh.name + ".LM.png",
+                        scene,
+                        false,
+                        false);
+                    switch(currentMesh.getClassName()){
+                        case "Mesh":
+                            assignLightmapOnMaterial(currentMesh.material, currentLightmap);
+                            break;
+                        case "TransformNode": 
+                            for(let j = 0; j < currentMeshChildren.length; j++){
+                                assignLightmapOnMaterial(currentMeshChildren[j].material, currentLightmap);
+                            }
+                            break;  
+                    }
+                }
+            }
+        );
+
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+
+</html>

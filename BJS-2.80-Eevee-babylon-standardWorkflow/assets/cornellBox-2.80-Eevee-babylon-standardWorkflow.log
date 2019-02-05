@@ -1,0 +1,141 @@
+Exporter version: 6.0-beta 6, Blender version: 2.80 (sub 43)
+========= Conversion from Blender to Babylon.js =========
+	Scene settings used :
+		inline textures     :  false
+		Material Type       :  STD
+		Positions Precision :  4
+		Normals Precision   :  3
+		UVs Precision       :  3
+		Vert Color Precision:  3
+		Mat Weight Precision:  2
+		texture directory   :  V:\Github\cornellBox\BJS-2.80-Eevee-babylon-standardWorkflow\assets\
+	Python World class constructor completed
+	WARNING: No active camera has been assigned, or is not in a currently selected Blender layer
+	processing begun of mesh:  bloc.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.bloc.000
+			processing texture checkerBJS
+				texture type:  diffuseTexture, mapped using: "UVMap"
+		num positions      :  92
+		num normals        :  92
+		num uvs            :  184
+		num uvs2           :  184
+		num colors         :  0
+		num indices        :  126
+	processing begun of mesh:  suzanne.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.suzanne.000
+		num positions      :  2328
+		num normals        :  2328
+		num uvs            :  4656
+		num uvs2           :  4656
+		num colors         :  0
+		num indices        :  11832
+	processing begun of mesh:  lamp.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.light.000
+		num positions      :  20
+		num normals        :  20
+		num uvs            :  40
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  30
+	processing begun of mesh:  cornellBox.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.cornellBox.default.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.cornellBox.ground.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.cornellBox.red.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.cornellBox.green.000
+			processing texture checker_meter
+				texture type:  diffuseTexture, mapped using: "UVMap"
+		processing begun of multimaterial:  cornellBox_2_80_Eevee_babylon_standardWorkflow.Multimaterial#0
+		num positions      :  20
+		num normals        :  20
+		num uvs            :  40
+		num uvs2           :  40
+		num colors         :  0
+		num indices        :  30
+	processing begun of node:  BJS-3D-logo.root.000
+	processing begun of mesh:  BJS-3D-logo_blue01.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_white01.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_blue01.000
+		processing begun of multimaterial:  cornellBox_2_80_Eevee_babylon_standardWorkflow.Multimaterial#1
+		num positions      :  74
+		num normals        :  74
+		num uvs            :  148
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  132
+	processing begun of mesh:  BJS-3D-logo_blue01.001
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_white01.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_blue01.000
+		registered as also a user of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_blue01.000
+		processing begun of multimaterial:  cornellBox_2_80_Eevee_babylon_standardWorkflow.Multimaterial#2
+		num positions      :  34
+		num normals        :  34
+		num uvs            :  68
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  60
+	processing begun of mesh:  BJS-3D-logo_blue02.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_white01.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_blue02.000
+		processing begun of multimaterial:  cornellBox_2_80_Eevee_babylon_standardWorkflow.Multimaterial#3
+		num positions      :  73
+		num normals        :  73
+		num uvs            :  146
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  120
+	processing begun of mesh:  BJS-3D-logo_blue03.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_white01.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_blue03.000
+		processing begun of multimaterial:  cornellBox_2_80_Eevee_babylon_standardWorkflow.Multimaterial#4
+		num positions      :  148
+		num normals        :  148
+		num uvs            :  296
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  276
+	processing begun of mesh:  BJS-3D-logo_blue03.001
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_white01.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_blue03.000
+		registered as also a user of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_blue03.000
+		processing begun of multimaterial:  cornellBox_2_80_Eevee_babylon_standardWorkflow.Multimaterial#5
+		num positions      :  90
+		num normals        :  90
+		num uvs            :  180
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  180
+	processing begun of mesh:  BJS-3D-logo_green.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_white01.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_green01.000
+		processing begun of multimaterial:  cornellBox_2_80_Eevee_babylon_standardWorkflow.Multimaterial#6
+		num positions      :  65
+		num normals        :  65
+		num uvs            :  130
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  108
+	processing begun of mesh:  BJS-3D-logo_red01.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_white01.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_red01.000
+		processing begun of multimaterial:  cornellBox_2_80_Eevee_babylon_standardWorkflow.Multimaterial#7
+		num positions      :  78
+		num normals        :  78
+		num uvs            :  156
+		num uvs2           :  156
+		num colors         :  0
+		num indices        :  168
+	processing begun of mesh:  BJS-3D-logo_red01.001
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_white01.000
+		processing begun of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_red01.000
+		registered as also a user of material:  cornellBox_2_80_Eevee_babylon_standardWorkflow.BJS-3D-logo_red01.000
+		processing begun of multimaterial:  cornellBox_2_80_Eevee_babylon_standardWorkflow.Multimaterial#8
+		num positions      :  78
+		num normals        :  78
+		num uvs            :  156
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  168
+========= Writing of JSON file started =========
+========= Writing of JSON file completed =========
+========= end of processing =========
+elapsed time:  0 min, 0.3408 secs

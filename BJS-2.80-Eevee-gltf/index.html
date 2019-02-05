@@ -70,6 +70,7 @@
                 var logoRoot = scene.getNodeByName("BJS-3D-logo.root.000");
                 logoRoot.rotationQuaternion = null;
                 scene.getMaterialByName("BJS-3D-logo_white01.000").unlit = true;
+                scene.getMaterialByName("light.000").unlit = true;
                 var timer = 0;
                 var rotationInterval = setInterval(function () {
                     logoRoot.position.y = 1.5 + Math.cos(timer) * 0.25;

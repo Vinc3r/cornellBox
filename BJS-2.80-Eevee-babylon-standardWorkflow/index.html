@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Cornell box - PBR workflow</title>
+    <title>Cornell box - Standard workflow</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/styles.css" media="screen" />
     <script src="js/babylon.js"></script>
@@ -16,18 +16,16 @@
         var engine = new BABYLON.Engine(canvas, true);
         var scene = new BABYLON.Scene(engine);
         scene.clearColor = BABYLON.Color3.Black();
-        var hdrTexture = new BABYLON.CubeTexture.CreateFromPrefilteredData("assets/neutral_environment.env", scene);
-        hdrTexture.name = "envTex";
-        hdrTexture.gammaSpace = false;
-        scene.environmentTexture = hdrTexture;
+        scene.ambientColor = BABYLON.Color3.White();
+        var uniformNumber = 1; //just to help in some Vector3 or Color3 operations
 
         // Add a camera to the scene and attach it to the canvas
         var universalCamera = new BABYLON.UniversalCamera("universalCamera", new BABYLON.Vector3(0, 1, 0), scene);
         universalCamera.speed = 0.1;
         universalCamera.fov = 1.2;
         universalCamera.minZ = 0.01;
-        universalCamera.position = new BABYLON.Vector3(0, 1.5, 4);
-        universalCamera.rotation = new BABYLON.Vector3(0, -Math.PI, 0);
+        universalCamera.position = new BABYLON.Vector3(0, 1.5, -4);
+        universalCamera.rotation = BABYLON.Vector3.Zero();
         scene.activeCamera = universalCamera;
         scene.activeCamera.attachControl(canvas);
 
@@ -39,14 +37,13 @@
             material.useLightmapAsShadowmap = true;
         }
 
-        //time to load the gltf file
         BABYLON.SceneLoader.ImportMesh(
-            "",
+            null,
             "assets/",
-            "cornellBox-2.79-Cycles-gltf.gltf",
+            "cornellBox-2.80-Eevee-babylon-standardWorkflow.babylon",
             scene,
             function () {
-                //lightmaps handling
+                // lightmaps assignation
                 var lightmappedObjects = [
                     "cornellBox.000",
                     "bloc.000",
@@ -63,39 +60,25 @@
                         lightmap.name = objectName + ".LM";
                         // using UV2
                         lightmap.coordinatesIndex = 1;
-                        var currentNode = scene.getNodeByName(objectName);
-                        if (currentNode) {
-                            switch (currentNode.getClassName()) {
-                                case "Mesh":
-                                    if (currentNode.material) {
-                                        // in gltf importer, one mesh = one material
-                                        assignLightmapOnMaterial(currentNode.material, lightmap);
-                                    }
-                                    break;
-                                case "TransformNode":
-                                    if (currentNode.getChildren()) {
-                                        currentNode.getChildren().forEach(function (childNode) {
-                                            if (childNode.getClassName() == "Mesh" &&
-                                                childNode
-                                                .material) {
-                                                // in gltf importer, one mesh = one material
-                                                assignLightmapOnMaterial(childNode.material,
-                                                    lightmap);
-                                            } else {
-                                                console.log("it seems that " + childNode.name +
-                                                    " is not a mesh?");
-                                            }
-                                        });
-                                    }
-                                    break;
+                        lightmap.vScale = -1;
+                        var mesh = scene.getMeshByName(objectName);
+                        if (mesh && mesh.getClassName() == "Mesh") {
+                            if (mesh.material && !mesh.material.subMaterials) {
+                                // mesh only have one material
+                                assignLightmapOnMaterial(mesh.material, lightmap);
+                            } else if (mesh.material.subMaterials) {
+                                // mesh have multiMaterials
+                                mesh.material.subMaterials.forEach(function (subMat) {
+                                    assignLightmapOnMaterial(subMat, lightmap);
+                                });
                             }
                         }
                     });
                 });
                 var logoRoot = scene.getNodeByName("BJS-3D-logo.root.000");
-                logoRoot.rotationQuaternion = null;
-                scene.getMaterialByName("BJS-3D-logo_white01.000").unlit = true;
-                scene.getMaterialByName("light.000").unlit = true;
+                logoRoot.getChildren().forEach(function(mesh){
+                    mesh.material.ambientColor = BABYLON.Color3.Black();
+                });
                 var timer = 0;
                 var rotationInterval = setInterval(function () {
                     logoRoot.position.y = 1.5 + Math.cos(timer) * 0.25;
@@ -105,7 +88,7 @@
             }
         );
 
-        engine.runRenderLoop(function () {
+        engine.runRenderLoop(function () { // Register a render loop to repeatedly render the scene
             scene.render();
         });
 

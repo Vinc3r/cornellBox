@@ -30,7 +30,11 @@
         scene.activeCamera = universalCamera;
         scene.activeCamera.attachControl(canvas);
 
-        var bjsLogo = null;
+        function assignLightmapOnMaterial(material, lightmap) {
+            material.lightmapTexture = lightmap;
+            // lightmap as shadow
+            material.useLightmapAsShadowmap = true;
+        }
 
         //time to load the gltf file
         BABYLON.SceneLoader.ImportMesh(
@@ -45,38 +49,46 @@
                     "bloc.000",
                     "suzanne.000"
                 ];
-                for (i = 0; i < lightmappedObjects.length; i++) {
-                    // we create the lightmap using the mesh name
-                    //new Texture(url, scene, noMipmap, invertY, samplingMode, onLoad, onError, buffer, deleteBuffer, format)
-                    var lightmap = new BABYLON.Texture("assets/LM/" + lightmappedObjects[i] + ".LM.png", scene,
-                        false, false);
-                    lightmap.name = lightmappedObjects[i] + ".LM";
-                    // using UV2
-                    lightmap.coordinatesIndex = 1;
-                    var mesh = scene.getMeshByName(lightmappedObjects[i]);
-                    var meshChildren = mesh.getChildren();
-                    //gltf importer split multimat to children meshes
-                    if (!mesh || !mesh.material && (meshChildren.length == 0)) {
-                        //here, the mesh doesn't have material or mesh childs, we skip
-                        continue;
-                    }
-                    // here the root mesh is divided into one submesh per material
-                    if (!mesh.material && (meshChildren.length > 0)) {
-                        // and cycle to its childrens, and so the abstract multimaterial list
-                        for (j = 0; j < mesh._children.length; j++) {
-                            var material = mesh._children[j].material;
-                            // lightmap as shadow
-                            material.lightmapTexture = lightmap;
-                            material.useLightmapAsShadowmap = true;
+                lightmappedObjects.forEach(function (objectName) {
+                    var lightmap = new BABYLON.Texture(
+                        "assets/LM/" + objectName + ".LM.png",
+                        scene,
+                        false,
+                        false
+                    );
+                    lightmap.onLoadObservable.addOnce(function () {
+                        lightmap.name = objectName + ".LM";
+                        // using UV2
+                        lightmap.coordinatesIndex = 1;
+                        var currentNode = scene.getNodeByName(objectName);
+                        if (currentNode) {
+                            switch (currentNode.getClassName()) {
+                                case "Mesh":
+                                    if (currentNode.material) {
+                                        // in gltf importer, one mesh = one material
+                                        assignLightmapOnMaterial(currentNode.material, lightmap);
+                                    }
+                                    break;
+                                case "TransformNode":
+                                    if (currentNode.getChildren()) {
+                                        currentNode.getChildren().forEach(function (childNode) {
+                                            if (childNode.getClassName() == "Mesh" &&
+                                                childNode
+                                                .material) {
+                                                // in gltf importer, one mesh = one material
+                                                assignLightmapOnMaterial(childNode.material,
+                                                    lightmap);
+                                            } else {
+                                                console.log("it seems that " + childNode.name +
+                                                    " is not a mesh?");
+                                            }
+                                        });
+                                    }
+                                    break;
+                            }
                         }
-                    }
-                    if (mesh.material) {
-                        // here we have one mesh with one submaterial
-                        // lightmap as shadow
-                        mesh.material.lightmapTexture = lightmap;
-                        mesh.material.useLightmapAsShadowmap = true;
-                    }
-                }
+                    });
+                });
             }
         );
 

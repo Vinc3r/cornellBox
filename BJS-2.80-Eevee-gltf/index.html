@@ -43,25 +43,27 @@
             scene,
             function () {
                 let lightmappedMeshes = ["bloc.000", "suzanne.000", "cornellBox.000"];
-                for (let i = 0; i < lightmappedMeshes.length; i++) {
-                    let currentMesh = scene.getNodeByName(lightmappedMeshes[i]);
+                lightmappedMeshes.forEach(function (objectName) {
+                    let currentMesh = scene.getNodeByName(objectName);
                     let currentMeshChildren = currentMesh.getChildren();
                     let currentLightmap = new BABYLON.Texture(
                         "assets/LM/" + currentMesh.name + ".LM.png",
                         scene,
                         false,
                         false);
-                    switch(currentMesh.getClassName()){
+                    switch (currentMesh.getClassName()) {
                         case "Mesh":
                             assignLightmapOnMaterial(currentMesh.material, currentLightmap);
                             break;
-                        case "TransformNode": 
-                            for(let j = 0; j < currentMeshChildren.length; j++){
-                                assignLightmapOnMaterial(currentMeshChildren[j].material, currentLightmap);
-                            }
-                            break;  
+                        case "TransformNode":
+                            currentMeshChildren.forEach(function (childs) {
+                                if (childs.material) {
+                                    assignLightmapOnMaterial(childs.material, currentLightmap);
+                                }
+                            });
+                            break;
                     }
-                }
+                });
             }
         );
 

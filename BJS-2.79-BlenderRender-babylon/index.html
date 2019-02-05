@@ -28,52 +28,50 @@
         scene.activeCamera = universalCamera;
         scene.activeCamera.attachControl(canvas);
 
-        function assignLightmap(material, lightmap) {
-            material.diffuseColor = BABYLON.Color3.Black();
-            // material.ambientColor = BABYLON.Color3.White();
+        function assignLightmapOnMaterial(material, lightmap) {
             material.lightmapTexture = lightmap;
             // lightmap as shadow
             material.useLightmapAsShadowmap = true;
-            //console.log("lightmap applied to " + material.name);
         }
 
         BABYLON.SceneLoader.ImportMesh(
-            "",
+            null,
             "assets/",
             "cornellBox-2.79-BlenderRender-babylon.babylon",
             scene,
-            function (meshes) {
-                //lightmaps handling
+            function () {
+                // lightmaps assignation
                 var lightmappedObjects = [
                     "cornellBox.000",
                     "bloc.000",
                     "suzanne.000"
                 ];
-                for (let i = 0; i < lightmappedObjects.length; i++) {
-                    // we create the lightmap using the mesh name
-                    var lightmap = new BABYLON.Texture("assets/LM/" + lightmappedObjects[i] + ".LM.png", scene,
-                        false, false);
-                    lightmap.name = lightmappedObjects[i] + ".LM";
-                    // using UV2
-                    lightmap.coordinatesIndex = 1;
-                    lightmap.vScale = -1;
-                    var mesh = scene.getMeshByName(lightmappedObjects[i]);
-                    if (!mesh || !mesh.material) {
-                        //here, the mesh doesn't have material or mesh childs, we skip
-                        continue;
-                    }
-                    if (mesh.material.subMaterials) {
-                        // mesh have multiMaterials
-                        for (let j = 0; j < mesh.material.subMaterials.length; j++) {
-                            assignLightmap(mesh.material.subMaterials[j], lightmap);
+                lightmappedObjects.forEach(function (objectName) {
+                    var lightmap = new BABYLON.Texture(
+                        "assets/LM/" + objectName + ".LM.png",
+                        scene,
+                        false,
+                        false
+                    );
+                    lightmap.onLoadObservable.addOnce(function () {
+                        lightmap.name = objectName + ".LM";
+                        // using UV2
+                        lightmap.coordinatesIndex = 1;
+                        lightmap.vScale = -1;
+                        var mesh = scene.getMeshByName(objectName);
+                        if (mesh && mesh.getClassName() == "Mesh") {
+                            if (mesh.material && !mesh.material.subMaterials) {
+                                // mesh only have one material
+                                assignLightmapOnMaterial(mesh.material, lightmap);
+                            } else if (mesh.material.subMaterials) {
+                                // mesh have multiMaterials
+                                mesh.material.subMaterials.forEach(function (subMat) {
+                                    assignLightmapOnMaterial(subMat, lightmap);
+                                });
+                            }
                         }
-                    }
-                    if (mesh.material && !mesh.material.subMaterials) {
-                        // mesh only have one material
-                        assignLightmap(mesh.material, lightmap);
-                    }
-                }
-                //scene.debugLayer.show()
+                    });
+                });
             }
         );
 

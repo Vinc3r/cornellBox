@@ -40,7 +40,7 @@
         BABYLON.SceneLoader.ImportMesh(
             "",
             "assets/",
-            "cornellBox-2.79-BlenderRender.babylon",
+            "cornellBox-2.79-BlenderRender-babylon.babylon",
             scene,
             function (meshes) {
                 //lightmaps handling
@@ -73,70 +73,6 @@
                         assignLightmap(mesh.material, lightmap);
                     }
                 }
-
-                // some things on the logo mesh
-                var bjsLogo = scene.getMeshByName("BJSlogo.000");
-                bjsLogo.position.y = 1.5;
-                scene.getMaterialByName("cornellBox_standard.BJS-3D-logo_white.01.000").emissiveColor = BABYLON.Color3
-                    .White();
-                var bjsRedMaterial;
-                for (let k = 0; k < bjsLogo.material.subMaterials.length; k++) {
-                    let currentMaterial = bjsLogo.material.subMaterials[k];
-                    let currentMaterialDefaultColor = currentMaterial.ambientColor;
-                    uniformNumber = 50;
-                    currentMaterial.diffuseColor = new BABYLON.Color3(
-                        currentMaterialDefaultColor.r - (currentMaterialDefaultColor.r * uniformNumber / 100),
-                        currentMaterialDefaultColor.g - (currentMaterialDefaultColor.g * uniformNumber / 100),
-                        currentMaterialDefaultColor.b - (currentMaterialDefaultColor.b * uniformNumber / 100)
-                    );
-                    if (currentMaterial.name.indexOf("logo_red") != -1) {
-                        currentMaterial.specularColor = BABYLON.Color3.White();
-                        currentMaterial.specularPower = 50;
-                        bjsRedMaterial = currentMaterial;
-                        continue;
-                    }
-                    currentMaterial.specularColor = BABYLON.Color3.White();
-                    currentMaterial.specularPower = 20;
-                }
-
-                // prepare the room to receive shadows
-                var cornellBox = scene.getMeshByName("cornellBox.000");
-                cornellBox.receiveShadows = true;
-                var cornellBoxGroundMtl = scene.getMaterialByName("cornellBox_standard.cornellBox.ground.000");
-                cornellBoxGroundMtl.diffuseColor = BABYLON.Color3.White();
-                cornellBoxGroundMtl.ambientColor = BABYLON.Color3.Black();
-
-                // dyn light to generate shadows
-                var light = new BABYLON.DirectionalLight("dirLight", new BABYLON.Vector3(0, -1, 0), scene);
-                light.position = new BABYLON.Vector3(0, 3, 0);
-
-                // logo shadow
-                var shadowGenerator = new BABYLON.ShadowGenerator(128, light);
-                shadowGenerator.setDarkness(0.75);
-                shadowGenerator.useBlurExponentialShadowMap = true;
-                shadowGenerator.addShadowCaster(bjsLogo);
-
-                // why not using glow?
-                var glowLayer = new BABYLON.GlowLayer("glow", scene, {
-                    mainTextureFixedSize: 256,
-                    blurKernelSize: 32
-                })
-
-                // some animations on the logo
-                var frame = 0; //this will be used as a time variable
-                scene.registerBeforeRender(function () {
-                    frame += 0.1;
-                    bjsLogo.rotation.x += .008;
-                    bjsLogo.rotation.y -= .009;
-                    bjsLogo.rotation.z -= .01;
-                    bjsRedMaterial.emissiveColor = new BABYLON.Color3(
-                        (Math.cos(frame) * 0.5) + 0.5,
-                        0,
-                        0
-                    );
-                    bjsLogo.position.y = (Math.cos(frame * 0.1) * 0.15) + 1.5;
-                });
-
                 //scene.debugLayer.show()
             }
         );

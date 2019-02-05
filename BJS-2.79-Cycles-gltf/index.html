@@ -77,55 +77,6 @@
                         mesh.material.useLightmapAsShadowmap = true;
                     }
                 }
-
-                // the mesh fake-light on the ceiling
-                var lightMaterial = scene.getMaterialByName("light.000");
-                lightMaterial.emissiveColor = BABYLON.Color3.White();
-
-                // some things on the logo mesh
-                bjsLogo = scene.getMeshByName("BJSlogo.000");
-                bjsLogo.position.y = 1.5;
-                scene.getMaterialByName("BJS-3D-logo_white.01.000").emissiveColor = BABYLON.Color3.White();
-                for (let k = 0; k < bjsLogo._children.length; k++) {
-                    bjsLogo._children[k].material.metallic = 0.1;
-                    bjsLogo._children[k].material.roughness = 0;
-                }
-                var bjsRedMaterial = scene.getMaterialByName("BJS-3D-logo_red.01.000");
-                bjsRedMaterial.metallic = 1;
-
-                // prepare the room to receive shadows
-                var cornellBox = scene.getMeshByName("cornellBox.000");
-                for (let k = 0; k < cornellBox._children.length; k++) {
-                    cornellBox._children[k].receiveShadows = true;
-                }
-                cornellBox.receiveShadows = true;
-
-                // dyn light to generate shadows
-                var light = new BABYLON.DirectionalLight("dirLight", new BABYLON.Vector3(0, -1, 0), scene);
-                light.position = new BABYLON.Vector3(0, 3, 0);
-
-                // logo shadow
-                var shadowGenerator = new BABYLON.ShadowGenerator(128, light);
-                shadowGenerator.useBlurExponentialShadowMap = true;
-                shadowGenerator.addShadowCaster(bjsLogo);
-
-                // why not using glow?
-                var glowLayer = new BABYLON.GlowLayer("glow", scene, {
-                    mainTextureFixedSize: 256,
-                    blurKernelSize: 32
-                });
-
-                // some animations on the logo
-                var frame = 0; //this will be used as a time variable
-
-                scene.registerBeforeRender(function () {
-                    frame += 0.1;
-                    bjsLogo.rotation.x += .008;
-                    bjsLogo.rotation.y -= .009;
-                    bjsLogo.rotation.z -= .01;
-                    bjsRedMaterial.emissiveColor = new BABYLON.Color3((Math.cos(frame) * 0.5) + 0.5, 0, 0);
-                    bjsLogo.position.y = (Math.cos(frame * 0.1) * 0.15) + 1.5;
-                });
             }
         );
 

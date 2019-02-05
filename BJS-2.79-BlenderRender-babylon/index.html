@@ -11,10 +11,11 @@
 <body>
     <canvas id="canvas"></canvas>
     <script type="text/javascript">
+        BABYLON.DebugLayer.InspectorURL = "js/babylon.inspector.bundle.js";
         var canvas = document.getElementById("canvas");
         var engine = new BABYLON.Engine(canvas, true);
         var scene = new BABYLON.Scene(engine);
-        scene.clearColor = BABYLON.Color3.White();
+        scene.clearColor = BABYLON.Color3.Black();
         scene.ambientColor = BABYLON.Color3.White();
         var uniformNumber = 1; //just to help in some Vector3 or Color3 operations
 
@@ -24,9 +25,11 @@
         universalCamera.fov = 1.2;
         universalCamera.minZ = 0.01;
         universalCamera.position = new BABYLON.Vector3(0, 1.5, -4);
-        universalCamera.rotation = new BABYLON.Vector3(0, Math.PI * 2, 0);
+        universalCamera.rotation = BABYLON.Vector3.Zero();
         scene.activeCamera = universalCamera;
         scene.activeCamera.attachControl(canvas);
+
+        var spotlight = new BABYLON.PointLight("pointlight", new BABYLON.Vector3(0, 3, 0), scene);
 
         function assignLightmapOnMaterial(material, lightmap) {
             material.lightmapTexture = lightmap;
@@ -72,13 +75,21 @@
                         }
                     });
                 });
+                var logoRoot = scene.getNodeByName("BJS-3D-logo.root.000");
+                logoRoot.getChildren().forEach(function(mesh){
+                    mesh.material.ambientColor = BABYLON.Color3.Black();
+                });
+                var timer = 0;
+                var rotationInterval = setInterval(function () {
+                    logoRoot.position.y = 1.5 + Math.cos(timer) * 0.25;
+                    logoRoot.rotation.y = timer;
+                    timer += 0.01;
+                }, 25);
             }
         );
 
         engine.runRenderLoop(function () { // Register a render loop to repeatedly render the scene
-            if (scene) {
-                scene.render();
-            }
+            scene.render();
         });
 
         window.addEventListener("resize", function () { // Watch for browser/canvas resize events

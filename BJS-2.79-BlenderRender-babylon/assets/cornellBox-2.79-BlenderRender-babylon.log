@@ -1,4 +1,4 @@
-Exporter version: 5.6.3, Blender version: 2.79 (sub 0)
+Exporter version: 5.6.4, Blender version: 2.79 (sub 0)
 ========= Conversion from Blender to Babylon.js =========
 	Scene settings used :
 		export scope        :  ALL
@@ -22,6 +22,8 @@ Exporter version: 5.6.3, Blender version: 2.79 (sub 0)
 		num indices        :  126
 	processing begun of mesh:  suzanne.000
 		processing begun of Standard material:  suzanne.000
+			Reflection texture found "spheremap.png"
+				Image texture found, type:  reflectionTexture, mapped using: "UVMap"
 		num positions      :  2328
 		num normals        :  2328
 		num uvs            :  4656
@@ -51,8 +53,91 @@ Exporter version: 5.6.3, Blender version: 2.79 (sub 0)
 		num uvs2           :  40
 		num colors         :  0
 		num indices        :  30
-	processing begun of light (POINT):  light.000
+	processing begun of node:  BJS-3D-logo.root.000
+	processing begun of mesh:  BJS-3D-logo_blue03.000
+		processing begun of Standard material:  BJS-3D-logo_white01.000
+		processing begun of Standard material:  BJS-3D-logo_blue03.000
+		processing begun of multimaterial:  cornellBox_2_79_BlenderRender_babylon.Multimaterial#1
+		num positions      :  142
+		num normals        :  142
+		num uvs            :  284
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  276
+	processing begun of mesh:  BJS-3D-logo_red01.000
+		registered as also a user of material:  BJS-3D-logo_white01.000
+		processing begun of Standard material:  BJS-3D-logo_red01.000
+		processing begun of multimaterial:  cornellBox_2_79_BlenderRender_babylon.Multimaterial#2
+		num positions      :  78
+		num normals        :  78
+		num uvs            :  156
+		num uvs2           :  156
+		num colors         :  0
+		num indices        :  168
+	processing begun of mesh:  BJS-3D-logo_blue01.001
+		registered as also a user of material:  BJS-3D-logo_white01.000
+		processing begun of Standard material:  BJS-3D-logo_blue01.000
+		processing begun of multimaterial:  cornellBox_2_79_BlenderRender_babylon.Multimaterial#3
+		num positions      :  34
+		num normals        :  34
+		num uvs            :  68
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  60
+	processing begun of mesh:  BJS-3D-logo_green.000
+		registered as also a user of material:  BJS-3D-logo_white01.000
+		processing begun of Standard material:  BJS-3D-logo_green01.000
+		processing begun of multimaterial:  cornellBox_2_79_BlenderRender_babylon.Multimaterial#4
+		num positions      :  65
+		num normals        :  65
+		num uvs            :  130
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  108
+	processing begun of mesh:  BJS-3D-logo_red01.001
+		registered as also a user of material:  BJS-3D-logo_white01.000
+		registered as also a user of material:  BJS-3D-logo_red01.000
+		processing begun of multimaterial:  cornellBox_2_79_BlenderRender_babylon.Multimaterial#5
+		num positions      :  78
+		num normals        :  78
+		num uvs            :  156
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  168
+	processing begun of mesh:  BJS-3D-logo_blue01.000
+		registered as also a user of material:  BJS-3D-logo_white01.000
+		registered as also a user of material:  BJS-3D-logo_blue01.000
+		processing begun of multimaterial:  cornellBox_2_79_BlenderRender_babylon.Multimaterial#6
+		num positions      :  74
+		num normals        :  74
+		num uvs            :  148
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  132
+	processing begun of mesh:  BJS-3D-logo_blue02.000
+		registered as also a user of material:  BJS-3D-logo_white01.000
+		processing begun of Standard material:  BJS-3D-logo_blue02.000
+			Reflection texture found "spheremap.png"
+				Image texture found, type:  reflectionTexture, mapped using: "UVMap"
+		processing begun of multimaterial:  cornellBox_2_79_BlenderRender_babylon.Multimaterial#7
+		num positions      :  73
+		num normals        :  73
+		num uvs            :  146
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  120
+	processing begun of mesh:  BJS-3D-logo_blue03.001
+		registered as also a user of material:  BJS-3D-logo_white01.000
+		registered as also a user of material:  BJS-3D-logo_blue03.000
+		processing begun of multimaterial:  cornellBox_2_79_BlenderRender_babylon.Multimaterial#8
+		num positions      :  90
+		num normals        :  90
+		num uvs            :  180
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  180
+	processing begun of light (SPOT):  light.000
 ========= Writing of scene file started =========
 ========= Writing of scene file completed =========
 ========= end of processing =========
-elapsed time:  0 min, 0.3395 secs
+elapsed time:  0 min, 0.4455 secs

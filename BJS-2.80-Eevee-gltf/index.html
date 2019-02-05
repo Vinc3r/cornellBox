@@ -11,10 +11,11 @@
 <body>
     <canvas id="canvas"></canvas>
     <script type="text/javascript">
+        BABYLON.DebugLayer.InspectorURL = "js/babylon.inspector.bundle.js";
         var canvas = document.getElementById("canvas");
         var engine = new BABYLON.Engine(canvas, true);
         var scene = new BABYLON.Scene(engine);
-        scene.clearColor = BABYLON.Color3.White();
+        scene.clearColor = BABYLON.Color3.Black();
         var hdrTexture = new BABYLON.CubeTexture.CreateFromPrefilteredData("assets/neutral_environment.env", scene);
         hdrTexture.name = "envTex";
         hdrTexture.gammaSpace = false;
@@ -26,9 +27,11 @@
         universalCamera.fov = 1.2;
         universalCamera.minZ = 0.01;
         universalCamera.position = new BABYLON.Vector3(0, 1.5, 4);
-        universalCamera.rotation = new BABYLON.Vector3(0, -3.15, 0);
+        universalCamera.rotation = new BABYLON.Vector3(0, -Math.PI, 0);
         scene.activeCamera = universalCamera;
         scene.activeCamera.attachControl(canvas);
+
+        var spotlight = new BABYLON.PointLight("pointlight", new BABYLON.Vector3(0, 3, 0), scene);
 
         function assignLightmapOnMaterial(material, lightmap) {
             material.lightmapTexture = lightmap;
@@ -64,6 +67,15 @@
                             break;
                     }
                 });
+                var logoRoot = scene.getNodeByName("BJS-3D-logo.root.000");
+                logoRoot.rotationQuaternion = null;
+                scene.getMaterialByName("BJS-3D-logo_white01.000").unlit = true;
+                var timer = 0;
+                var rotationInterval = setInterval(function () {
+                    logoRoot.position.y = 1.5 + Math.cos(timer) * 0.25;
+                    logoRoot.rotation.y = timer;
+                    timer += 0.01;
+                }, 25);
             }
         );
 
